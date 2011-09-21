@@ -9,7 +9,8 @@ import org.junit.Test;
  */
 public class JCEExampleTest {
     @Test
-    public void shouldGetSamePlaintextAfterEncryptingAndDecrypting() {
+    public void decryptingCiphertextShouldReturnOriginalPlaintext() {
+        assertEquals("Original Plaintext", decrypt(encrypt("Original Plaintext")));
 
     }
 }
