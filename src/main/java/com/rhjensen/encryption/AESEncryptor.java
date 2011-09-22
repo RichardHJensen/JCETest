@@ -16,14 +16,8 @@ public class AESEncryptor {
     private Cipher encryptor;
     private Cipher decryptor;
 
-    public AESEncryptor() {
-        byte[] sessionKey = null;
-        final byte[] iv = new byte[]{0x7F, 0x6E, 0x5D, 0x4C, 0x3B, 0x2A, 0x19, 0x08,
-                0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0x00};
+    public AESEncryptor(byte[] sessionKey, byte[] iv) {
         try {
-            KeyGenerator kGen = KeyGenerator.getInstance("AES");
-            kGen.init(128);
-            sessionKey = kGen.generateKey().getEncoded();
             encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
             encryptor.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sessionKey, "AES"), new IvParameterSpec(iv));
             decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
