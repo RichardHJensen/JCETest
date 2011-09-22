@@ -16,10 +16,10 @@ public class JCEExampleTest {
     }
 
     private String decrypt(String cipherText) {
-        return null;
+        return cipherText;
     }
 
     private String encrypt(String plainText) {
-        return null;
+        return plainText;
     }
 }
