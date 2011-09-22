@@ -20,4 +20,11 @@ public class AESEncryptorTest {
         assertEquals(SAMPLE_TEXT, plainText);
     }
 
+    @Test
+    public void encryptingTheSameStringShouldGiveTheSameCiphertext() throws Exception {
+        String cipherText1 = aesExample.encrypt(SAMPLE_TEXT);
+        String cipherText2 = new AESEncryptor().encrypt(SAMPLE_TEXT);
+        assertEquals(cipherText1, cipherText2);
+    }
+
 }
