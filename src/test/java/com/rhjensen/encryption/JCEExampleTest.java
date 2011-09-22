@@ -2,10 +2,7 @@ package com.rhjensen.encryption;
 
 import org.junit.Test;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -31,11 +28,14 @@ public class JCEExampleTest {
     }
 
     private String encrypt(String plainText) {
-        byte[] sessionKey = null; //Where you get this from is beyond the scope of this post
-        byte[] iv = null; //Ditto
+        byte[] sessionKey = null;
+        byte[] iv = new byte[] { 0x7F, 0x6E, 0x5D, 0x4C, 0x3B, 0x2A, 0x19, 0x08 };
         byte[] ciphertext = null;
         Cipher cipher;
         try {
+            KeyGenerator kGen = KeyGenerator.getInstance("AES");
+            kGen.init(128);
+            sessionKey = kGen.generateKey().getEncoded();
             cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             //You can use ENCRYPT_MODE or DECRYPT_MODE
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sessionKey, "AES"), new IvParameterSpec(iv));
