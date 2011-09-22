@@ -18,18 +18,42 @@ import static org.junit.Assert.assertEquals;
  * Time: 6:08 PM
  */
 public class JCEExampleTest {
+
+    private byte[] sessionKey = null;
+    private final byte[] iv = new byte[] { 0x7F, 0x6E, 0x5D, 0x4C, 0x3B, 0x2A, 0x19, 0x08,
+                             0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0x00 };
+
     @Test
     public void decryptingCiphertextShouldReturnOriginalPlaintext() {
         assertEquals("Original Plaintext", decrypt(encrypt("Original Plaintext")));
     }
 
     private String decrypt(String cipherText) {
-        return cipherText;
+        byte[] plaintext = null;
+        Cipher cipher;
+        try {
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            //You can use ENCRYPT_MODE or DECRYPT_MODE
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(sessionKey, "AES"), new IvParameterSpec(iv));
+
+            plaintext = cipher.doFinal(cipherText.getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return plaintext.toString();
     }
 
     private String encrypt(String plainText) {
-        byte[] sessionKey = null;
-        byte[] iv = new byte[] { 0x7F, 0x6E, 0x5D, 0x4C, 0x3B, 0x2A, 0x19, 0x08 };
         byte[] ciphertext = null;
         Cipher cipher;
         try {
