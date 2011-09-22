@@ -16,12 +16,20 @@ public class AESEncryptor {
     private Cipher encryptor;
     private Cipher decryptor;
 
-    public AESEncryptor(byte[] sessionKey, byte[] iv) {
+    public AESEncryptor(String sessionKey, String iv) {
+        byte[] keyBytes;
+        byte[] vectorBytes;
         try {
+            keyBytes = new BASE64Decoder().decodeBuffer(sessionKey);
+            vectorBytes = new BASE64Decoder().decodeBuffer(iv);
             encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            encryptor.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sessionKey, "AES"), new IvParameterSpec(iv));
+            encryptor.init(Cipher.ENCRYPT_MODE,
+                    new SecretKeySpec(keyBytes, "AES"),
+                    new IvParameterSpec(vectorBytes));
             decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            decryptor.init(Cipher.DECRYPT_MODE, new SecretKeySpec(sessionKey, "AES"), encryptor.getParameters());
+            decryptor.init(Cipher.DECRYPT_MODE,
+                    new SecretKeySpec(keyBytes, "AES"),
+                    encryptor.getParameters());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -29,6 +37,8 @@ public class AESEncryptor {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -1,1 +1,3 @@
-This file was created by IntelliJ IDEA 10.5.2 for binding GitHub repository
+Updated after finishing the initial set of tests.
+Things that could be done:
+* Test passing in a known key and vector with an encypted string to create an expected test.
