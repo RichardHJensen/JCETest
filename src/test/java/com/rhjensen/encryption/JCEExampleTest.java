@@ -1,11 +1,14 @@
 package com.rhjensen.encryption;
 
 import org.junit.Test;
+import sun.misc.BASE64Encoder;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -36,7 +39,7 @@ public class JCEExampleTest {
             //You can use ENCRYPT_MODE or DECRYPT_MODE
             cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(sessionKey, "AES"), new IvParameterSpec(iv));
 
-            plaintext = cipher.doFinal(cipherText.getBytes());
+            plaintext = cipher.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(cipherText));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -49,6 +52,10 @@ public class JCEExampleTest {
             e.printStackTrace();
         } catch (BadPaddingException e) {
             e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return plaintext.toString();
     }
@@ -64,7 +71,7 @@ public class JCEExampleTest {
             //You can use ENCRYPT_MODE or DECRYPT_MODE
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sessionKey, "AES"), new IvParameterSpec(iv));
 
-            ciphertext = cipher.doFinal(plainText.getBytes());
+            ciphertext = cipher.doFinal(plainText.getBytes("utf-8"));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -77,8 +84,10 @@ public class JCEExampleTest {
             e.printStackTrace();
         } catch (BadPaddingException e) {
             e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        return ciphertext.toString();
+        return new BASE64Encoder().encode(ciphertext).toString();
 
     }
 }
