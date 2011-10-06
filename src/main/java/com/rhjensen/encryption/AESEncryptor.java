@@ -1,7 +1,6 @@
 package com.rhjensen.encryption;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -15,13 +14,15 @@ import java.security.NoSuchAlgorithmException;
 public class AESEncryptor {
     private Cipher encryptor;
     private Cipher decryptor;
+    private Base64 base64codec;
 
     public AESEncryptor(String sessionKey, String iv) {
         byte[] keyBytes;
         byte[] vectorBytes;
         try {
-            keyBytes = new BASE64Decoder().decodeBuffer(sessionKey);
-            vectorBytes = new BASE64Decoder().decodeBuffer(iv);
+            base64codec = new Base64();
+            keyBytes = base64codec.decode(sessionKey);
+            vectorBytes = base64codec.decode(iv);
             encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
             encryptor.init(Cipher.ENCRYPT_MODE,
                     new SecretKeySpec(keyBytes, "AES"),
@@ -38,8 +39,6 @@ public class AESEncryptor {
             e.printStackTrace();
         } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -48,12 +47,12 @@ public class AESEncryptor {
         byte[] utf8bytes = plainText.getBytes("utf-8");
         byte[] ciphertext = encryptor.doFinal(utf8bytes);
 
-        return new BASE64Encoder().encode(ciphertext);
+        return base64codec.encodeToString(ciphertext);
     }
 
     public String decrypt(String cipherText) throws IOException, IllegalBlockSizeException, BadPaddingException {
         // decode, decrypt, use bytes to create string
-        byte[] encryptedBytes = new BASE64Decoder().decodeBuffer(cipherText);
+        byte[] encryptedBytes = base64codec.decode(cipherText);
         byte[] plaintext = decryptor.doFinal(encryptedBytes);
         return new String(plaintext);
     }

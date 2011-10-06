@@ -1,9 +1,9 @@
 package com.rhjensen.encryption;
 
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import sun.misc.BASE64Encoder;
 
 import javax.crypto.KeyGenerator;
 
@@ -29,8 +29,8 @@ public class AESEncryptorTest {
         byte[] keyBytes = KEY_GENERATOR.generateKey().getEncoded();
         byte[] vectorBytes = new byte[]{0x7F, 0x6E, 0x5D, 0x4C, 0x3B, 0x2A, 0x19, 0x08,
             0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0x00};
-        SESSION_KEY = new BASE64Encoder().encode(keyBytes);
-        VECTOR = new BASE64Encoder().encode(vectorBytes);
+        SESSION_KEY = new Base64().encodeToString(keyBytes);
+        VECTOR = new Base64().encodeToString(vectorBytes);
     }
 
     @Before
